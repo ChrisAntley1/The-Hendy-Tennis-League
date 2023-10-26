@@ -29,21 +29,17 @@ for %%F in ("%csvFile%") do (
 :: Create a new CSV file with data only, skipping the first row
 set "outputFile=%fileName% converted.csv"
 
-(set "skipFirstRow=true" && for /f "usebackq tokens=1-5 delims=," %%a in ("%csvFile%") do (
-    if defined skipFirstRow (
-        set "skipFirstRow="
-    ) else (
-        for /f "tokens=1-3 delims=:" %%x in ("%%c") do (
-            set /a "start=%%x*3600+%%y*60+%%z"
-        )
-
-        for /f "tokens=1-3 delims=:" %%x in ("%%d") do (
-            set /a "end=%%x*3600+%%y*60+%%z"
-        )
-
-        set /a "label+=1"
-        echo !start!,!end!,point !label!
+(for /f "usebackq tokens=1-5 delims=," %%a in ("%csvFile%") do (
+    for /f "tokens=1-3 delims=:" %%x in ("%%c") do (
+        set /a "start=%%x*3600+%%y*60+%%z"
     )
+
+    for /f "tokens=1-3 delims=:" %%x in ("%%d") do (
+        set /a "end=%%x*3600+%%y*60+%%z"
+    )
+
+    set /a "label+=1"
+    echo !start!,!end!,point !label!
 )) > "%outputFile%"
 
 echo New CSV file created: %outputFile%
